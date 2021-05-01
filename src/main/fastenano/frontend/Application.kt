@@ -40,6 +40,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import nanoapi.AccountWeight
 import nanoapi.Envelope
+import nanoapi.Message
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -105,9 +106,10 @@ suspend fun handleRequest(readText: String): String {
     val optCorrelationId = fb.createString("")
     val account = fb.createString("nano_3t6k35gi95xu6tergt6p69ck76ogmitsa8mnijtpxm9fkcm736xtoncuohr3")
     val message = AccountWeight.createAccountWeight(fb, account)
-    val envelope = Envelope.createEnvelope(fb, /* time= */ 42L, optCredentials, optCorrelationId, 0, message)
+    val envelope = Envelope.createEnvelope(fb, /* time= */ 42L, optCredentials, optCorrelationId, Message.AccountWeight, message)
     fb.finish(envelope)
     val data = fb.dataBuffer()
+
     return "Client wants " + StandardCharsets.UTF_8.decode(data).toString()
 }
 
