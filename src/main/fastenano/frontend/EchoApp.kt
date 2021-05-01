@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package fastenano.frontend.api
+package fastenano.frontend
 
 import io.ktor.network.selector.ActorSelectorManager
 import io.ktor.network.sockets.aSocket
@@ -23,14 +23,12 @@ import kotlinx.coroutines.*
 import java.io.InputStream
 import java.util.Scanner
 
-/**
- * Two mains are provided, you must first start EchoApp.Server, and then EchoApp.Client.
- * You can also start EchoApp.Server and then use a telnet client to connect to the echo server.
- */
+/** WebSocket application. */
 object EchoApp {
     val selectorManager = ActorSelectorManager(Dispatchers.IO)
     val DefaultPort = 9002
 
+    /** Simple WebSocket server that echoes what it receives. */
     object Server {
         @JvmStatic
         fun main(args: Array<String>) {
@@ -57,6 +55,12 @@ object EchoApp {
         }
     }
 
+    /**
+     * WebSocket client.
+     *
+     * <p>You must first start EchoApp.Server, and then EchoApp.Client.
+     * You can also start EchoApp.Server and then use a telnet client to connect to the echo server.
+     */
     object Client {
         @JvmStatic
         fun main(args: Array<String>) {

@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package fastenano.frontend.api
+package fastenano.frontend
 
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -37,6 +37,7 @@ import java.time.Duration
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
+/** Web application started by {@code io.ktor.server.netty.EngineMain}. */
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
@@ -90,4 +91,3 @@ fun Application.module(testing: Boolean = false) {
 
 class AuthenticationException : RuntimeException()
 class AuthorizationException : RuntimeException()
-
