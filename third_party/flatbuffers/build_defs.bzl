@@ -45,8 +45,6 @@ def flatbuffer_library_public(
       srcs: Source .fbs files. Sent in order to the compiler.
       outs: Output files from flatc.
       language_flag: Target language flag. One of [-c, -j, -js].
-      out_prefix: Prepend this path to the front of all generated files except on
-          single source targets. Usually is a directory name.
       includes: Optional, list of filegroups of schemas that the srcs depend on.
       include_paths: Optional, list of paths the includes files can be found in.
       flatc_args: Optional, list of additional arguments to pass to flatc.
@@ -66,13 +64,6 @@ def flatbuffer_library_public(
     binaries.
     """
     include_paths_cmd = ["-I %s" % (s) for s in include_paths]
-
-    # '$(@D)' when given a single source target will give the appropriate
-    # directory. Appending 'out_prefix' is only necessary when given a build
-    # target with multiple sources.
-    output_directory = (
-        ("-o $(@D)/%s" % (out_prefix)) if len(srcs) > 1 else ("-o $(@D)")
-    )
     genrule_cmd = " ".join([
         "SRCS=($(SRCS));",
         "for f in $${SRCS[@]:0:%s}; do" % len(srcs),
@@ -80,7 +71,7 @@ def flatbuffer_library_public(
         " ".join(include_paths_cmd),
         " ".join(flatc_args),
         language_flag,
-        output_directory,
+        "-o $(RULEDIR)",
         "$$f;",
         "done",
     ])
@@ -104,7 +95,7 @@ def flatbuffer_library_public(
             " ".join(flatc_args),
             " ".join(include_paths_cmd),
             language_flag,
-            output_directory,
+            "-o $(RULEDIR)",
             "$$f;",
             "done",
         ])
