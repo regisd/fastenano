@@ -18,4 +18,5 @@
 #    bazel run @unpinned_maven//:pin
 #
 ARTIFACTS = [
+    "io.netty:netty:3.6.1.Final",
 ]
