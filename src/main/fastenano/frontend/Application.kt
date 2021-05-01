@@ -13,6 +13,7 @@
 // limitations under the License.
 package fastenano.frontend
 
+import com.google.flatbuffers.FlatBufferBuilder
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -33,9 +34,12 @@ import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.websocket.webSocket
+import java.nio.charset.StandardCharsets
 import java.time.Duration
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import nanoapi.AccountWeight
+import nanoapi.Envelope
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -85,7 +89,7 @@ fun Application.module(testing: Boolean = false) {
                 val frame = incoming.receive()
                 if (frame is Frame.Text) {
                     launch {
-                        var resp = handleRequest(frame.readText())
+                        val resp = handleRequest(frame.readText())
                         send(Frame.Text(resp))
                     }
                 }
@@ -96,7 +100,15 @@ fun Application.module(testing: Boolean = false) {
 
 suspend fun handleRequest(readText: String): String {
     delay(2_000L);
-    return "Client said: $readText";
+    val fb = FlatBufferBuilder()
+    val optCredentials = fb.createString("")
+    val optCorrelationId = fb.createString("")
+    val account = fb.createString("nano_3t6k35gi95xu6tergt6p69ck76ogmitsa8mnijtpxm9fkcm736xtoncuohr3")
+    val message = AccountWeight.createAccountWeight(fb, account)
+    val envelope = Envelope.createEnvelope(fb, /* time= */ 42L, optCredentials, optCorrelationId, 0, message)
+    fb.finish(envelope)
+    val data = fb.dataBuffer()
+    return "Client wants " + StandardCharsets.UTF_8.decode(data).toString()
 }
 
 class AuthenticationException : RuntimeException()

@@ -13,7 +13,6 @@
 // limitations under the License.
 package fastenano.frontend;
 
-import fastenano.proto.Encoding
 import nanoapi.Message
 
 /**

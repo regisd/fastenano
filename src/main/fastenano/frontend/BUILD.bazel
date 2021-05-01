@@ -20,6 +20,7 @@ kt_jvm_binary(
     deps = [
         "//src/main/fastenano/frontend/request",
         "//src/main/fastenano/frontend/resources",
+        "@maven//:com_google_flatbuffers_flatbuffers_java",
         "@maven//:io_ktor_ktor_network",
         "@maven//:io_ktor_ktor_server_core",
         "@maven//:io_ktor_ktor_server_host_common",
