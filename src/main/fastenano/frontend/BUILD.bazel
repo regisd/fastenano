@@ -18,7 +18,7 @@ kt_jvm_binary(
     srcs = glob(["*.kt"]),
     main_class = "io.ktor.server.netty.EngineMain",
     deps = [
-        "//src/main/resources",
+        "//src/main/fastenano/frontend/resources",
         "@maven//:io_ktor_ktor_network",
         "@maven//:io_ktor_ktor_server_core",
         "@maven//:io_ktor_ktor_server_host_common",
