@@ -1,2 +1,5 @@
 /.idea
-/fastenano.iml
+/.ijwb
+*.iml
+
+/bazel-*
