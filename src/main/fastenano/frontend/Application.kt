@@ -34,6 +34,8 @@ import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.websocket.webSocket
 import java.time.Duration
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -77,16 +79,24 @@ fun Application.module(testing: Boolean = false) {
 
         }
 
-        webSocket("/myws/echo") {
-            send(Frame.Text("Hi from server"))
+        webSocket("/ws/nano") {
+            send(Frame.Text("Request account balance"))
             while (true) {
                 val frame = incoming.receive()
                 if (frame is Frame.Text) {
-                    send(Frame.Text("Client said: " + frame.readText()))
+                    launch {
+                        var resp = handleRequest(frame.readText())
+                        send(Frame.Text(resp))
+                    }
                 }
             }
         }
     }
+}
+
+suspend fun handleRequest(readText: String): String {
+    delay(2_000L);
+    return "Client said: $readText";
 }
 
 class AuthenticationException : RuntimeException()
