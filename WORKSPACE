@@ -46,3 +46,15 @@ maven_install(
 load("@maven//:defs.bzl", "pinned_maven_install")
 
 pinned_maven_install()
+
+# Flatbuffers
+FLATBUFFERS_VERSION = "1.12.0"
+
+FLATBUFFERS_SHA = "62f2223fb9181d1d6338451375628975775f7522185266cd5296571ac152bc45"
+
+http_archive(
+    name = "flatbuffers",
+    sha256 = FLATBUFFERS_SHA,
+    strip_prefix = "flatbuffers-%s" % FLATBUFFERS_VERSION,
+    url = "https://github.com/google/flatbuffers/archive/refs/tags/v%s.tar.gz" % FLATBUFFERS_VERSION,
+)

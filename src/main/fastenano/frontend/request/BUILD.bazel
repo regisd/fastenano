@@ -11,21 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_binary")
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_library")
 
-kt_jvm_binary(
-    name = "frontend",
+kt_jvm_library(
+    name = "request",
     srcs = glob(["*.kt"]),
-    main_class = "io.ktor.server.netty.EngineMain",
+    visibility = ["//src/main/fastenano:__subpackages__"],
     deps = [
-        "//src/main/fastenano/frontend/request",
-        "//src/main/fastenano/frontend/resources",
-        "@maven//:io_ktor_ktor_network",
-        "@maven//:io_ktor_ktor_server_core",
-        "@maven//:io_ktor_ktor_server_host_common",
-        "@maven//:io_ktor_ktor_server_netty",
-        "@maven//:io_ktor_ktor_server_tests",
-        "@maven//:io_ktor_ktor_websockets",
-        "@maven//:org_jetbrains_kotlinx_kotlinx_coroutines_core_jvm",
+        "//src/main/fastenano/proto:nano_java_fbs",
     ],
 )
