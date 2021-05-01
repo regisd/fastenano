@@ -38,7 +38,6 @@ maven_install(
     artifacts = ARTIFACTS,
     maven_install_json = "//third_party:maven_install.json",
     repositories = [
-        "https://jcenter.bintray.com/",
         "https://maven.google.com",
         "https://repo1.maven.org/maven2",
     ],
