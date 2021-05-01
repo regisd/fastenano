@@ -18,5 +18,11 @@
 #    bazel run @unpinned_maven//:pin
 #
 ARTIFACTS = [
-    "io.netty:netty:3.6.1.Final",
+    "ch.qos.logback:logback-classic:1.2.1",
+    "io.ktor:ktor-network:1.5.4",
+    "io.ktor:ktor-server-core:1.5.4",
+    "io.ktor:ktor-server-host-common:1.5.4",
+    "io.ktor:ktor-server-netty:1.5.4",
+    "io.ktor:ktor-server-tests:1.5.4",
+    "io.ktor:ktor-websockets:1.5.4",
 ]

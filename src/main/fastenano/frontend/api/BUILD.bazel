@@ -1,0 +1,29 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_binary")
+
+kt_jvm_binary(
+    name = "api",
+    srcs = glob(["*.kt"]),
+    main_class = "io.ktor.server.netty.EngineMain",
+    deps = [
+        "//src/main/resources",
+        "@maven//:io_ktor_ktor_network",
+        "@maven//:io_ktor_ktor_server_core",
+        "@maven//:io_ktor_ktor_server_host_common",
+        "@maven//:io_ktor_ktor_server_netty",
+        "@maven//:io_ktor_ktor_server_tests",
+        "@maven//:io_ktor_ktor_websockets",
+    ],
+)
