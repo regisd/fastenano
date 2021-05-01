@@ -1,22 +1,27 @@
+// Copyright 2021 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 package fastenano.frontend.api
 
-import io.ktor.application.*
-import io.ktor.response.*
-import io.ktor.request.*
-import io.ktor.features.*
-import io.ktor.routing.*
-import io.ktor.http.*
-import io.ktor.websocket.*
-import io.ktor.http.cio.websocket.*
-import java.time.*
-import java.io.*
-import java.util.*
-import io.ktor.network.selector.*
-import io.ktor.network.sockets.*
-import io.ktor.network.util.*
-import kotlin.coroutines.*
+import io.ktor.network.selector.ActorSelectorManager
+import io.ktor.network.sockets.aSocket
+import io.ktor.network.sockets.openReadChannel
+import io.ktor.network.sockets.openWriteChannel
+import io.ktor.utils.io.readUTF8Line
+import io.ktor.utils.io.writeStringUtf8
 import kotlinx.coroutines.*
-import io.ktor.utils.io.*
+import java.io.InputStream
+import java.util.Scanner
 
 /**
  * Two mains are provided, you must first start EchoApp.Server, and then EchoApp.Client.
