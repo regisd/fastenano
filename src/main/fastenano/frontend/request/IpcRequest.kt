@@ -13,6 +13,8 @@
 // limitations under the License.
 package fastenano.frontend;
 
+import fastenano.proto.Encoding
+import nanoapi.Message
 
 /**
  * An IPC framing request on the nano node, using flatbuffer format.
@@ -24,5 +26,5 @@ package fastenano.frontend;
  *
  * See https://docs.nano.org/integration-guides/ipc-integration/#ipc-requestresponse-format
  */
-data class FlatbufferIpcRequest(val encoding: String, val payload: ByteArray) {
+data class FlatbufferIpcRequest(val payload: Message) {
 }

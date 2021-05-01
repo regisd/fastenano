@@ -1,0 +1,59 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#load("@flatbuffers//:build_defs.bzl", "flatbuffer_library_public")
+load("//third_party/flatbuffers:build_defs.bzl", "flatbuffer_library_public")
+
+flatbuffer_library_public(
+    name = "nanoapi_fbs",
+    srcs = ["nanoapi.fbs"],
+    outs = [
+        "nanoapi/AccountWeight.java",
+        "nanoapi/AccountWeightResponse.java",
+        "nanoapi/Block.java",
+        "nanoapi/BlockChange.java",
+        "nanoapi/BlockInfo.java",
+        "nanoapi/BlockOpen.java",
+        "nanoapi/BlockReceive.java",
+        "nanoapi/BlockSend.java",
+        "nanoapi/BlockState.java",
+        "nanoapi/BlockSubType.java",
+        "nanoapi/ElectionInfo.java",
+        "nanoapi/Envelope.java",
+        "nanoapi/Error.java",
+        "nanoapi/EventAck.java",
+        "nanoapi/EventConfirmation.java",
+        "nanoapi/EventServiceStop.java",
+        "nanoapi/IsAlive.java",
+        "nanoapi/Message.java",
+        "nanoapi/ServiceRegister.java",
+        "nanoapi/ServiceStop.java",
+        "nanoapi/Success.java",
+        "nanoapi/TopicConfirmation.java",
+        "nanoapi/TopicConfirmationOptions.java",
+        "nanoapi/TopicConfirmationType.java",
+        "nanoapi/TopicConfirmationTypeFilter.java",
+        "nanoapi/TopicServiceStop.java",
+    ],
+    language_flag = "-j",
+)
+
+java_library(
+    name = "nanoapi_java_fbs",
+    srcs = [":nanoapi_fbs"],
+    visibility = ["//src/main/fastenano:__subpackages__"],
+    deps = [
+        "@maven//:com_google_flatbuffers_flatbuffers_java",
+    ],
+)

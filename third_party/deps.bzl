@@ -19,6 +19,7 @@
 #
 ARTIFACTS = [
     "ch.qos.logback:logback-classic:1.2.1",
+    "com.google.flatbuffers:flatbuffers-java:1.12.0",
     "io.ktor:ktor-network:1.5.4",
     "io.ktor:ktor-server-core:1.5.4",
     "io.ktor:ktor-server-host-common:1.5.4",

@@ -19,5 +19,6 @@ kt_jvm_library(
     visibility = ["//src/main/fastenano:__subpackages__"],
     deps = [
         "//src/main/fastenano/proto:nano_java_fbs",
+        "//third_party/nanoapi:nanoapi_java_fbs",
     ],
 )
