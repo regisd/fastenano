@@ -29,16 +29,22 @@ import io.ktor.http.cio.websocket.Frame
 import io.ktor.http.cio.websocket.pingPeriod
 import io.ktor.http.cio.websocket.readText
 import io.ktor.http.cio.websocket.timeout
+import io.ktor.network.selector.ActorSelectorManager
+import io.ktor.network.sockets.aSocket
+import io.ktor.network.sockets.openReadChannel
+import io.ktor.network.sockets.openWriteChannel
 import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.websocket.webSocket
-import java.nio.charset.StandardCharsets
+import java.nio.ByteBuffer
 import java.time.Duration
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import nanoapi.AccountWeight
+import nanoapi.AccountWeightResponse
 import nanoapi.Envelope
 import nanoapi.Message
 
@@ -71,7 +77,7 @@ fun Application.module(testing: Boolean = false) {
 
     routing {
         get("/") {
-            call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
+            call.respondText("Try /ws/nano instead", contentType = ContentType.Text.Plain)
         }
 
         install(StatusPages) {
@@ -85,13 +91,15 @@ fun Application.module(testing: Boolean = false) {
         }
 
         webSocket("/ws/nano") {
-            send(Frame.Text("Request account balance"))
+            send(Frame.Text("Connected"))
             while (true) {
                 val frame = incoming.receive()
                 if (frame is Frame.Text) {
                     launch {
+                        send(Frame.Text("Processing..."))
                         val resp = handleRequest(frame.readText())
-                        send(Frame.Text(resp))
+                        // send(Frame.Text(resp))
+                        send(Frame.Text("Done."))
                     }
                 }
             }
@@ -99,18 +107,40 @@ fun Application.module(testing: Boolean = false) {
     }
 }
 
-suspend fun handleRequest(readText: String): String {
+suspend fun handleRequest(address: String): String {
     delay(2_000L);
     val fb = FlatBufferBuilder()
     val optCredentials = fb.createString("")
     val optCorrelationId = fb.createString("")
-    val account = fb.createString("nano_3t6k35gi95xu6tergt6p69ck76ogmitsa8mnijtpxm9fkcm736xtoncuohr3")
+    val account = fb.createString(address)
     val message = AccountWeight.createAccountWeight(fb, account)
-    val envelope = Envelope.createEnvelope(fb, /* time= */ 42L, optCredentials, optCorrelationId, Message.AccountWeight, message)
+    val envelope = Envelope.createEnvelope(
+        fb, /* time= */
+        42L,
+        optCredentials,
+        optCorrelationId,
+        Message.AccountWeight,
+        message
+    )
     fb.finish(envelope)
+
     val data = fb.dataBuffer()
 
-    return "Client wants " + StandardCharsets.UTF_8.decode(data).toString()
+    val tcpSocket = aSocket(ActorSelectorManager(Dispatchers.IO)).tcp()
+        .connect("127.0.0.1", 7077)
+    val input = tcpSocket.openReadChannel()
+    val output = tcpSocket.openWriteChannel(autoFlush = true)
+
+    output.writeFully(data)
+    // Read the response
+    val respBuffer = ByteBuffer.allocate(input.availableForRead)
+    val respRead = input.readFully(respBuffer)
+    val resp = AccountWeightResponse.getRootAsAccountWeightResponse(respBuffer)
+    return String.format(
+        "Response: Account (%s) has voting weight %s",
+        address,
+        resp.votingWeight()
+    )
 }
 
 class AuthenticationException : RuntimeException()
